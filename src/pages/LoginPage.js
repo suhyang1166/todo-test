@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-
 import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 
@@ -16,6 +15,7 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       const response = await api.post("/user/login", { email, password });
+      console.log("Response:", response);
       if (response.status === 200) {
         setUser(response.data.user);
         sessionStorage.setItem("token", response.data.token);
@@ -29,6 +29,7 @@ const LoginPage = () => {
       setError(err.message);
     }
   };
+
   return (
     <div className="display-center">
       {error && <div className="red-error">{error}</div>}
@@ -39,6 +40,7 @@ const LoginPage = () => {
           <Form.Control
             type="email"
             placeholder="Enter email"
+            value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
         </Form.Group>
@@ -48,6 +50,7 @@ const LoginPage = () => {
           <Form.Control
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </Form.Group>
@@ -60,6 +63,12 @@ const LoginPage = () => {
           </span>
         </div>
       </Form>
+      {user && (
+        <div className="user-info">
+          <h2>Welcome, {user.name}</h2>
+          <p>Email: {user.email}</p>
+        </div>
+      )}
     </div>
   );
 };
